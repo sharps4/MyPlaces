@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.ksp)
 }
 
 configurations.all {
@@ -35,8 +35,15 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     compileSdk = 37
+}
+
+ksp {
+    // Le schéma exporté est versionné avec le code : il documente la base et sert
+    // de référence pour écrire les futures migrations Room.
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -56,17 +63,21 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
     implementation(libs.coil.compose)
     implementation(libs.converter.gson)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.logging.interceptor)
     implementation(libs.maps.compose)
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
     implementation(libs.retrofit)
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)

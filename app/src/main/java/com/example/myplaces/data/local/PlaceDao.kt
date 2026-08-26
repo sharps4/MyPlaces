@@ -12,6 +12,9 @@ interface PlaceDao {
     @Query("SELECT * FROM places WHERE author IS NULL ORDER BY createdAt DESC")
     fun observeMine(): Flow<List<PlaceEntity>>
 
+    @Query("SELECT * FROM places WHERE author IS NOT NULL ORDER BY createdAt DESC")
+    fun observeImported(): Flow<List<PlaceEntity>>
+
     @Query("SELECT * FROM places WHERE id = :id")
     fun observeById(id: Long): Flow<PlaceEntity?>
 
@@ -20,6 +23,9 @@ interface PlaceDao {
 
     @Query("SELECT * FROM places")
     suspend fun getAllOnce(): List<PlaceEntity>
+
+    @Query("SELECT uuid FROM places")
+    suspend fun getAllUuids(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(place: PlaceEntity): Long
