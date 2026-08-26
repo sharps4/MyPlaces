@@ -1,12 +1,12 @@
 package com.example.myplaces.ui.map
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MyLocation
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +34,13 @@ fun MapScreen(
     viewModel: MapViewModel,
     onMapLongClick: (GeoPoint) -> Unit,
     onMarkerClick: (Place) -> Unit,
+    onShowList: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val places by viewModel.places.collectAsState()
+    val availableEmojis by viewModel.availableEmojis.collectAsState()
+    val selectedFilter by viewModel.selectedEmojiFilter.collectAsState()
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
 
     val permissionState = rememberMultiplePermissionsState(
@@ -48,7 +51,6 @@ fun MapScreen(
     )
 
     // Configuration d'une source alternative (CartoDB Voyager)
-    // Moins restrictive que le serveur OSM standard et très propre visuellement
     val cartoDbSource = remember {
         XYTileSource(
             "CartoDB_Voyager",
@@ -133,6 +135,40 @@ fun MapScreen(
                 mv.invalidate()
             }
         )
+
+        // Bandeau de filtrage par emoji
+        if (availableEmojis.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(availableEmojis) { emoji ->
+                    FilterChip(
+                        selected = selectedFilter == emoji,
+                        onClick = { viewModel.toggleFilter(emoji) },
+                        label = { Text(emoji) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    )
+                }
+            }
+        }
+
+        // Bouton récapitulatif (Liste)
+        SmallFloatingActionButton(
+            onClick = onShowList,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 80.dp, end = 16.dp),
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            Icon(Icons.Default.List, contentDescription = "Récapitulatif")
+        }
 
         FloatingActionButton(
             onClick = {

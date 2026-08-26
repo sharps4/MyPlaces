@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.myplaces.ui.AppViewModelProvider
 import com.example.myplaces.ui.MainScreen
 import com.example.myplaces.ui.add.AddPlaceScreen
+import com.example.myplaces.ui.list.PlaceListScreen
 import com.example.myplaces.ui.theme.MyPlacesTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,14 +38,29 @@ fun MyPlacesNavHost() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "map") {
         composable("map") {
+            val viewModel: com.example.myplaces.ui.map.MapViewModel = viewModel(factory = AppViewModelProvider.Factory)
             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 MainScreen(
                     onAddPlace = { geoPoint ->
                         navController.navigate("add/${geoPoint.latitude}/${geoPoint.longitude}")
                     },
-                    modifier = Modifier.padding(innerPadding)
+                    onShowList = {
+                        navController.navigate("list")
+                    },
+                    modifier = Modifier.padding(innerPadding),
+                    viewModel = viewModel
                 )
             }
+        }
+        composable("list") {
+            val viewModel: com.example.myplaces.ui.map.MapViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            PlaceListScreen(
+                viewModel = viewModel,
+                onPlaceClick = { place ->
+                    navController.popBackStack()
+                },
+                onBack = { navController.popBackStack() }
+            )
         }
         composable(
             route = "add/{lat}/{lng}",

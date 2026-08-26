@@ -19,6 +19,7 @@ import java.util.*
 @Composable
 fun MainScreen(
     onAddPlace: (GeoPoint) -> Unit,
+    onShowList: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MapViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -33,7 +34,8 @@ fun MainScreen(
             onMarkerClick = { place ->
                 selectedPlace = place
                 showBottomSheet = true
-            }
+            },
+            onShowList = onShowList
         )
 
         if (showBottomSheet && selectedPlace != null) {
