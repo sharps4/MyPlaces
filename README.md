@@ -4,7 +4,7 @@ Application Android native permettant de cartographier ses souvenirs. Chaque lie
 enregistré avec un titre, une description, un émoji de ressenti, une photo, et l'adresse
 postale réelle résolue automatiquement depuis les coordonnées GPS.
 
-**Auteurs :** Adrian Lecorf, Léo H.
+**Auteurs :** Adrian, Léo, Théophile
 
 ## Fonctionnalités
 
