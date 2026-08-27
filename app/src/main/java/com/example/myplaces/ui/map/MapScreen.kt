@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ fun MapScreen(
     onMapLongClick: (GeoPoint) -> Unit,
     onMarkerClick: (Place) -> Unit,
     onShowList: () -> Unit,
+    onShowSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -168,6 +170,17 @@ fun MapScreen(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ) {
             Icon(Icons.Default.List, contentDescription = "Récapitulatif")
+        }
+
+        // Bouton Paramètres
+        SmallFloatingActionButton(
+            onClick = onShowSettings,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp, end = 16.dp),
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+            Icon(Icons.Default.Settings, contentDescription = "Paramètres")
         }
 
         FloatingActionButton(

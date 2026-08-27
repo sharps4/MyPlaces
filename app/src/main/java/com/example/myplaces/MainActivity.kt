@@ -19,6 +19,7 @@ import com.example.myplaces.ui.AppViewModelProvider
 import com.example.myplaces.ui.MainScreen
 import com.example.myplaces.ui.add.AddPlaceScreen
 import com.example.myplaces.ui.list.PlaceListScreen
+import com.example.myplaces.ui.settings.SettingsScreen
 import com.example.myplaces.ui.theme.MyPlacesTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,10 +48,16 @@ fun MyPlacesNavHost() {
                     onShowList = {
                         navController.navigate("list")
                     },
+                    onShowSettings = {
+                        navController.navigate("settings")
+                    },
                     modifier = Modifier.padding(innerPadding),
                     viewModel = viewModel
                 )
             }
+        }
+        composable("settings") {
+            SettingsScreen(onBack = { navController.popBackStack() })
         }
         composable("list") {
             val viewModel: com.example.myplaces.ui.map.MapViewModel = viewModel(factory = AppViewModelProvider.Factory)

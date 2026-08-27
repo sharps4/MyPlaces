@@ -20,6 +20,7 @@ import java.util.*
 fun MainScreen(
     onAddPlace: (GeoPoint) -> Unit,
     onShowList: () -> Unit,
+    onShowSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MapViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -35,7 +36,8 @@ fun MainScreen(
                 selectedPlace = place
                 showBottomSheet = true
             },
-            onShowList = onShowList
+            onShowList = onShowList,
+            onShowSettings = onShowSettings
         )
 
         if (showBottomSheet && selectedPlace != null) {
